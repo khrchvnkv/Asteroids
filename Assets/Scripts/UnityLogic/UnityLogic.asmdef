@@ -2,7 +2,9 @@
     "name": "UnityLogic",
     "rootNamespace": "",
     "references": [
-        "GUID:daabc7913250b5348834571634c20890"
+        "GUID:daabc7913250b5348834571634c20890",
+        "GUID:424c109c039b23a469d7e72a2a76e122",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,11 +1,17 @@
 using System;
-using System.Security.Authentication.ExtendedProtection;
+using CoreLogic;
+using CoreLogic.SceneLoader;
+using CoreLogic.UI;
+using Cysharp.Threading.Tasks;
+using UnityLogic.UnityEventSystem;
 using UnityEngine;
+using UnityLogic.UI.SplashScreen;
 
 namespace UnityLogic
 {
-    public class GameCore : MonoBehaviour, IServiceProvider
+    public sealed class GameCore : MonoBehaviour
     {
+        #region Static
         public static GameCore Instance { get; private set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -21,13 +27,29 @@ namespace UnityLogic
             }
             Instance = new GameObject("[GameCore]").AddComponent<GameCore>();
         }
+        #endregion
+        
+        public EventManager EventManager { get; private set; }
+
+        private GameSceneManager _sceneManager;
+        private EventSystemController _eventSystem;
+        
         private void Awake()
         {
-            
+            InitializeCoreLogic();
         }
-        object IServiceProvider.GetService(Type serviceType)
+        private async UniTask InitializeCoreLogic()
         {
-            throw new NotImplementedException();
+            EventManager = new EventManager();
+            _sceneManager = new GameSceneManager();
+            await _sceneManager.LoadSceneAsync();
+            
+            // Hide Splash screen
+            EventManager.Push<HideWindowEvent>(new SplashScreenWindowData());
+        }
+        public void RegisterEventSystem(in EventSystemController eventSystem)
+        {
+            _eventSystem = eventSystem;
         }
     }
 }
