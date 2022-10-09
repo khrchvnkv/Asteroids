@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace UnityLogic
@@ -12,7 +13,11 @@ namespace UnityLogic
             {
                 if (_instance == null)
                 {
-                    _instance = new GameObject($"[{typeof(T)}]").AddComponent<T>();
+                    _instance = FindObjectOfType<T>();
+                    if (_instance == null)
+                    {
+                        _instance = new GameObject($"[{typeof(T)}]").AddComponent<T>();
+                    }
                     DontDestroyOnLoad(_instance);
                 }
                 return _instance;

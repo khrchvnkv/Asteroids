@@ -1,9 +1,10 @@
-using System;
-
 namespace CoreLogic.UI
 {
     public interface IEventData { }
-    public interface IWindowData : IEventData { }
+    public interface IWindowData : IEventData
+    {
+        string WindowName { get; }
+    }
     public readonly struct ShowWindowEvent : IEvent
     {
         public readonly IWindowData Window;

@@ -4,7 +4,13 @@ using UnityEngine;
 
 namespace UnityLogic.UI
 {
-    public abstract class UserInterfaceWindow<TData> : MonoBehaviour 
+    public interface IWindow
+    {
+        IWindowData WindowData { get; }
+        void Show();
+        void Hide();
+    }
+    public abstract class UserInterfaceWindow<TData> : MonoBehaviour, IWindow
         where TData : IWindowData
     {
         [SerializeField] private GameObject container;
@@ -12,41 +18,21 @@ namespace UnityLogic.UI
         protected EventManager EventManager;
         protected TData _windowData;
 
+        public IWindowData WindowData => _windowData;
+        
         private void Awake()
         {
             EventManager = GameCore.Instance.EventManager;
+            InitWindowData();
         }
-        private void OnEnable()
+        protected abstract void InitWindowData();
+        public virtual void Show()
         {
-            Subscribe();
+            container.SetActive(true);
         }
-        private void OnDisable()
+        public virtual void Hide()
         {
-            Unsubscribe();
-        }
-        protected virtual void Subscribe()
-        {
-            EventManager.Subscribe(this, (in ShowWindowEvent data) => ShowWindow(_windowData));
-            EventManager.Subscribe(this, (in HideWindowEvent data) => HideWindow(_windowData));
-        }
-        protected virtual void Unsubscribe()
-        {
-            EventManager.Unsubscribe<ShowWindowEvent>(this);
-            EventManager.Unsubscribe<HideWindowEvent>(this);
-        }
-        private void ShowWindow(in TData data)
-        {
-            if (data.GetType() == _windowData.GetType())
-            {
-                container.SetActive(true);
-            }
-        }
-        private void HideWindow(in TData data)
-        {
-            if (data.GetType() == _windowData.GetType())
-            {
-                container.SetActive(false);
-            }
+            container.SetActive(false);
         }
     }
 }
