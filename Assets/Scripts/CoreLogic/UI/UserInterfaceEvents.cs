@@ -1,26 +1,26 @@
 namespace CoreLogic.UI
 {
-    public interface IEventData { }
-    public interface IWindowData : IEventData
+    public interface IWindowEvent : IEvent
     {
-        string WindowName { get; }
+        IWindowData WindowData { get; }
     }
-    public readonly struct ShowWindowEvent : IEvent
+    public interface IWindowData { }
+    public readonly struct ShowWindowEvent : IWindowEvent
     {
-        public readonly IWindowData Window;
+        public IWindowData WindowData { get; }
         
         public ShowWindowEvent(IWindowData window)
         {
-            Window = window;
+            WindowData = window;
         }
     }
-    public readonly struct HideWindowEvent : IEvent
+    public readonly struct HideWindowEvent : IWindowEvent
     {
-        public readonly IWindowData Window;
+        public IWindowData WindowData { get; }
         
         public HideWindowEvent(IWindowData window)
         {
-            Window = window;
+            WindowData = window;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace UnityLogic.UI
         {
             _windows = new List<IWindow>();
             _windows = GetComponentsInChildren<IWindow>().ToList();
+           
             Subscribe();
         }
         private void Subscribe()
@@ -22,6 +23,7 @@ namespace UnityLogic.UI
             EventManager.Subscribe<ShowWindowEvent>(this, ShowWindow);
             EventManager.Subscribe<HideWindowEvent>(this, HideWindow);
         }
+
         public void Unregister()
         {
             Unsubscribe();
@@ -31,26 +33,23 @@ namespace UnityLogic.UI
             EventManager.Unsubscribe<ShowWindowEvent>(this);
             EventManager.Unsubscribe<HideWindowEvent>(this);
         }
-        private void ShowWindow(in IEventData eventData)
+        private void ShowWindow(in ShowWindowEvent eventData)
         {
-            if (eventData is IWindowData windowData)
+            foreach (var window in _windows)
             {
-                foreach (var window in _windows)
+                if (window.WindowType == eventData.WindowData.GetType())
                 {
-                    if (window.WindowData.WindowName == windowData.WindowName)
-                    {
-                        window.Show();
-                    }
+                    window.Show(eventData.WindowData);
                 }
             }
         }
-        private void HideWindow(in IEventData eventData)
+        private void HideWindow(in HideWindowEvent eventData)
         {
-            if (eventData is IWindowData windowData)
+            if (eventData is IWindowEvent windowData)
             {
                 foreach (var window in _windows)
                 {
-                    if (window.WindowData.WindowName == windowData.WindowName)
+                    if (window.WindowType == windowData.WindowData.GetType())
                     {
                         window.Hide();
                     }

@@ -42,15 +42,17 @@ namespace UnityLogic
         }
         private async UniTask InitializeCoreLogic()
         {
+            const int delay = 3000;
             EventManager = new EventManager();
             _sceneManager = new GameSceneManager();
             await _sceneManager.LoadSceneAsync();
             await UniTask.WaitWhile(() => _eventSystem == null);
             UIController.Instance.Register();
+            await UniTask.Delay(delay);
             
             // Hide Splash screen
-            EventManager.Push<HideWindowEvent>(new SplashScreenWindowData());
-            EventManager.Push<ShowWindowEvent>(new MainMenuWindowData());
+            EventManager.Push(new HideWindowEvent(new SplashScreenWindowData()));
+            EventManager.Push(new ShowWindowEvent(new MainMenuWindowData()));
         }
         public void RegisterEventSystem(in EventSystemController eventSystem)
         {

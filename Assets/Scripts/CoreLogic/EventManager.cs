@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
-using CoreLogic.UI;
 
 namespace CoreLogic
 {
     public interface IEvent{ }
     public sealed class EventManager
     {
-        private class ContainerCollection
+        private interface IContainerCollection
         {
-            private readonly Dictionary<int, UnityEventHandler> _handlersMap = new Dictionary<int, UnityEventHandler>();
+            void Unsubscribe(in int senderHash);
+            bool IsSubscribed(in int senderHash);
+        }
+        private class ContainerCollection<TEvent> : IContainerCollection where TEvent : struct, IEvent
+        {
+            private readonly Dictionary<int, UnityEventHandler<TEvent>> _handlersMap;
 
-            public void Subscribe(in int senderHash, in UnityEventHandler eventHandler)
+            public ContainerCollection()
+            {
+                _handlersMap = new Dictionary<int, UnityEventHandler<TEvent>>();
+            }
+            public void Subscribe(in int senderHash, in UnityEventHandler<TEvent> eventHandler)
             {
                 _handlersMap[senderHash] = eventHandler;
             }
@@ -23,7 +31,7 @@ namespace CoreLogic
             {
                 return _handlersMap.ContainsKey(senderHash);
             }
-            public void Invoke(in IEventData eventData)
+            public void Invoke(in TEvent eventData)
             {
                 foreach (var handler in _handlersMap.Values)
                 {
@@ -31,23 +39,23 @@ namespace CoreLogic
                 }
             }
         }
-        private readonly Dictionary<Type, ContainerCollection> _actionsContainer;
+        private readonly Dictionary<Type, IContainerCollection> _actionsContainer;
 
         public EventManager()
         {
-            _actionsContainer = new Dictionary<Type, ContainerCollection>();
+            _actionsContainer = new Dictionary<Type, IContainerCollection>();
         }
-        public void Subscribe<TEvent>(in object sender, in UnityEventHandler eventHandler) 
+        public void Subscribe<TEvent>(in object sender, in UnityEventHandler<TEvent> eventHandler) 
             where TEvent : struct, IEvent
         {
             var cacheType = typeof(TEvent);
             var hash = sender.GetHashCode();
             if (!_actionsContainer.ContainsKey(cacheType))
             {
-                _actionsContainer[cacheType] = new ContainerCollection();
+                _actionsContainer[cacheType] = new ContainerCollection<TEvent>();
             }
-            var containerCollection = _actionsContainer[cacheType];
-            if (!containerCollection.IsSubscribed(hash))
+            if (!_actionsContainer[cacheType].IsSubscribed(hash) &&
+                _actionsContainer[cacheType] is ContainerCollection<TEvent> containerCollection)
             {
                 containerCollection.Subscribe(hash, eventHandler);
             }
@@ -59,16 +67,15 @@ namespace CoreLogic
             if (_actionsContainer.ContainsKey(cacheType))
             {
                 var hash = sender.GetHashCode();
-                var containerCollection = _actionsContainer[cacheType];
-                containerCollection.Unsubscribe(hash);
+                _actionsContainer[cacheType].Unsubscribe(hash);
             }
         }
-        public void Push<T>(IEventData eventData) where T: struct, IEvent
+        public void Push<T>(T eventData) where T: struct, IEvent
         {
             var cacheType = typeof(T);
-            if (_actionsContainer.TryGetValue(cacheType, out var container))
+            if (_actionsContainer.TryGetValue(cacheType, out var container) &&
+                container is ContainerCollection<T> containerCollection)
             {
-                var containerCollection = container;
                 containerCollection.Invoke(eventData);
             }
         }

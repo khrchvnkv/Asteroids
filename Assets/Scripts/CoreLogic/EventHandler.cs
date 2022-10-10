@@ -1,6 +1,4 @@
-using CoreLogic.UI;
-
 namespace CoreLogic
 {
-    public delegate void UnityEventHandler(in IEventData eventData);
+    public delegate void UnityEventHandler<T>(in T eventData) where T : IEvent;
 }
