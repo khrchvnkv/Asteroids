@@ -1,4 +1,5 @@
 using System;
+using CoreLogic;
 using CoreLogic.UI;
 using UnityEngine;
 
@@ -7,8 +8,8 @@ namespace UnityLogic.UI
     public interface IWindow
     {
         Type WindowType { get; }
-        void Show(IWindowData data);
-        void Hide();
+        void ShowWindow(IWindowData data);
+        void HideWindow();
     }
     public abstract class UserInterfaceWindow<TData> : MonoBehaviour, IWindow
         where TData : IWindowData
@@ -17,18 +18,21 @@ namespace UnityLogic.UI
 
         protected TData WindowData;
         public Type WindowType => typeof(TData);
+        protected EventManager EventManager => GameCore.Instance.EventManager;
         
         private void Awake()
         {
             InitWindowData();
+            Inject();
         }
+        protected virtual void Inject() { }
         protected abstract void InitWindowData();
-        public virtual void Show(IWindowData data)
+        public virtual void ShowWindow(IWindowData data)
         {
             WindowData = (TData)data;
             container.SetActive(true);
         }
-        public virtual void Hide()
+        public virtual void HideWindow()
         {
             container.SetActive(false);
         }

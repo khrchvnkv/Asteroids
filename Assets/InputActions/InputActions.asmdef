@@ -1,10 +1,7 @@
 {
-    "name": "UnityLogic",
+    "name": "InputActions",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:daabc7913250b5348834571634c20890",
-        "GUID:9b981565f89364543a4c5a38b85f2c9f",
         "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],

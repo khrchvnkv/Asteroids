@@ -2,16 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreLogic;
 using CoreLogic.UI;
+using UnityEngine;
 
 namespace UnityLogic.UI
 {
-    public class UIController : MonoSingleton<UIController>
+    public class UIController : MonoBehaviour
     {
         private EventManager EventManager => GameCore.Instance.EventManager;
 
         private List<IWindow> _windows;
 
-        public void Register()
+        private void Awake()
         {
             _windows = new List<IWindow>();
             _windows = GetComponentsInChildren<IWindow>().ToList();
@@ -23,8 +24,7 @@ namespace UnityLogic.UI
             EventManager.Subscribe<ShowWindowEvent>(this, ShowWindow);
             EventManager.Subscribe<HideWindowEvent>(this, HideWindow);
         }
-
-        public void Unregister()
+        private void OnDestroy()
         {
             Unsubscribe();
         }
@@ -39,7 +39,7 @@ namespace UnityLogic.UI
             {
                 if (window.WindowType == eventData.WindowData.GetType())
                 {
-                    window.Show(eventData.WindowData);
+                    window.ShowWindow(eventData.WindowData);
                 }
             }
         }
@@ -51,7 +51,7 @@ namespace UnityLogic.UI
                 {
                     if (window.WindowType == windowData.WindowData.GetType())
                     {
-                        window.Hide();
+                        window.HideWindow();
                     }
                 }
             }
