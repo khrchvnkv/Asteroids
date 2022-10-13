@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace UnityLogic.GamePlay.Player
@@ -10,13 +11,15 @@ namespace UnityLogic.GamePlay.Player
 
         private Vector3 _movingDirection;
 
+        public event Action<float, float> OnPositionChanged;
+
         public MovingBehaviour(IMovable movable, Transform movingTransform)
         {
             _movable = movable;
             _transform = movingTransform;
             _movableData = movable.MovableData;
         }
-        void ICharacterBehaviour.UpdateAction()
+        public void UpdateAction()
         {
             // Move
             if (_movable.Vertical == 0.0f)
@@ -31,8 +34,11 @@ namespace UnityLogic.GamePlay.Player
             }
 
             _movingDirection = Vector3.ClampMagnitude(_movingDirection, _movableData.MaxSpeed);
-            _transform.position += _movingDirection * _movableData.AcceleratingSpeed;
+            var position = _transform.position;
+            position += _movingDirection * _movableData.AcceleratingSpeed;
+            _transform.position = position;
             CheckCameraOutOfBounds();
+            OnPositionChanged?.Invoke(position.x, position.y);
 
             // Rotate
             _transform.Rotate(Vector3.forward, _movable.Horizontal * -180.0f * Time.deltaTime);

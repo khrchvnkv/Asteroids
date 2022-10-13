@@ -6,8 +6,8 @@ namespace UnityLogic.GamePlay.Player
     public class PlayerController : MonoBehaviour, IMovable
     {
         private PlayerInputActions _inputActions;
-        private ICharacterBehaviour _movingBehaviour;
-        
+
+        public MovingBehaviour MovingBehaviour { get; private set; }
         public float Horizontal { get; private set; }
         public float Vertical { get; private set; }
         public MovableCharacterData MovableData { get; private set; }
@@ -23,7 +23,7 @@ namespace UnityLogic.GamePlay.Player
                 MaxX = 9.0f,
                 MaxY = 4.5f
             };
-            _movingBehaviour = new MovingBehaviour(this, transform);
+            MovingBehaviour = new MovingBehaviour(this, transform);
             _inputActions.Player.Shoot.performed += context => Shoot();
         }
         public void SetBehaviourActivity(in bool isActivity)
@@ -45,7 +45,7 @@ namespace UnityLogic.GamePlay.Player
                 Vector2 direction = _inputActions.Player.Move.ReadValue<Vector2>();
                 Horizontal = direction.x;
                 Vertical = direction.y;
-                _movingBehaviour.UpdateAction();
+                MovingBehaviour.UpdateAction();
             }
         }
     }

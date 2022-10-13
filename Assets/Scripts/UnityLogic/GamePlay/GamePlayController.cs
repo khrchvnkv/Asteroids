@@ -1,5 +1,7 @@
+using CoreLogic.UI;
 using UnityEngine;
 using UnityLogic.GamePlay.Player;
+using UnityLogic.UI.GameHUD;
 
 namespace UnityLogic.GamePlay
 {
@@ -17,6 +19,7 @@ namespace UnityLogic.GamePlay
         {
             gamePlayController.SetActive(true);
             playerController.SetBehaviourActivity(true);
+            EventManager.Push(new ShowWindowEvent(new GameHUD_Data(playerController.MovingBehaviour)));
         }
     }
 }

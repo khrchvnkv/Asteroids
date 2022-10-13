@@ -6,8 +6,8 @@ using UnityLogic.GamePlay;
 
 namespace UnityLogic.UI.MainMenu
 {
-    public class MainMenuWindowData : IWindowData { }
-    public class MainMenuWindow : UserInterfaceWindow<MainMenuWindowData>
+    public sealed class MainMenuWindowData : IWindowData { }
+    public sealed class MainMenuWindow : UserInterfaceWindow<MainMenuWindowData>
     {
         [SerializeField] private Button startButton;
   
