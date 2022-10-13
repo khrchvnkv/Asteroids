@@ -5,6 +5,7 @@ namespace CoreLogic.UI
         IWindowData WindowData { get; }
     }
     public interface IWindowData { }
+    
     public readonly struct ShowWindowEvent : IWindowEvent
     {
         public IWindowData WindowData { get; }

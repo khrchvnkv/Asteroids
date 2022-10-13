@@ -22,11 +22,9 @@ namespace UnityLogic.UI
         
         private void Awake()
         {
-            InitWindowData();
             Inject();
         }
         protected virtual void Inject() { }
-        protected abstract void InitWindowData();
         public virtual void ShowWindow(IWindowData data)
         {
             WindowData = (TData)data;

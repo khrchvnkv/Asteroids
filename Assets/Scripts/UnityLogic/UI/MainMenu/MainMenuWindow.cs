@@ -1,4 +1,3 @@
-using CoreLogic;
 using CoreLogic.UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,10 +10,6 @@ namespace UnityLogic.UI.MainMenu
     {
         [SerializeField] private Button startButton;
   
-        protected override void InitWindowData()
-        {
-            WindowData = new MainMenuWindowData();
-        }
         protected override void Inject()
         {
             startButton.onClick.AddListener(OnStartButtonClicked);

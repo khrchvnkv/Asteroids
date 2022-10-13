@@ -9,7 +9,6 @@ namespace UnityLogic.UI.GameHUD
     {
         public readonly MovingBehaviour MovingBehaviour;
         
-        public GameHUD_Data() { }
         public GameHUD_Data(MovingBehaviour movingBehaviour)
         {
             MovingBehaviour = movingBehaviour;
@@ -22,10 +21,6 @@ namespace UnityLogic.UI.GameHUD
         
         [SerializeField] private TMP_Text xCoordText, yCoordText;
         
-        protected override void InitWindowData()
-        {
-            WindowData = new GameHUD_Data();
-        }
         public override void ShowWindow(IWindowData data)
         {
             base.ShowWindow(data);
