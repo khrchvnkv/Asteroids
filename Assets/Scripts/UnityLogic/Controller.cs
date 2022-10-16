@@ -1,3 +1,4 @@
+using System;
 using CoreLogic;
 using UnityEngine;
 
@@ -9,12 +10,21 @@ namespace UnityLogic
         
         private void Awake()
         {
-            Initialize();
+            Inject();
         }
-        protected virtual void Initialize()
+        private void OnEnable()
+        {
+            Subscribe();
+        }
+        private void OnDisable()
+        {
+            Unsubscribe();
+        }
+        protected virtual void Inject()
         {
             GameCore.Instance.RegisterManager(this);
         }
-        public virtual void Unregister() { }
+        protected virtual void Subscribe() { }
+        protected virtual void Unsubscribe() { }
     }
 }
