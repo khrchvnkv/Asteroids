@@ -5,9 +5,13 @@ namespace UnityLogic.GamePlay.Player
 {
     public class PlayerController : MonoBehaviour, IMovable
     {
+        [SerializeField] private Transform gunTransform;
+        
         private PlayerInputActions _inputActions;
+        private ICharacterBehaviour _movingBehaviour;
+        private ICharacterBehaviour _shootingBehaviour;
 
-        public MovingBehaviour MovingBehaviour { get; private set; }
+        public ICharacterBehaviour MovingBehaviour => _movingBehaviour;
         public float Horizontal { get; private set; }
         public float Vertical { get; private set; }
         public MovableCharacterData MovableData { get; private set; }
@@ -15,15 +19,17 @@ namespace UnityLogic.GamePlay.Player
         public void Initialize()
         {
             _inputActions = new PlayerInputActions();
+            var gamePlayController = GameCore.Instance.GetController<GamePlayController>();
             MovableData = new MovableCharacterData()
             {
-                AcceleratingSpeed = 0.25f,
-                MaxSpeed = 1.0f,
-                StoppingSpeed = 1.0f,
-                MaxX = 9.0f,
-                MaxY = 4.5f
+                AcceleratingSpeed = 0.35f,
+                MaxSpeed = 7.0f,
+                StoppingSpeed = 1.2f,
+                RotateSpeed = -200.0f,
+                Screen = gamePlayController.Screen
             };
-            MovingBehaviour = new MovingBehaviour(this, transform);
+            _movingBehaviour = new MovingBehaviour(this, transform);
+            _shootingBehaviour = new ShootingBehaviour(gunTransform, gamePlayController);
             _inputActions.Player.Shoot.performed += context => Shoot();
         }
         public void SetBehaviourActivity(in bool isActivity)
@@ -37,7 +43,10 @@ namespace UnityLogic.GamePlay.Player
                 _inputActions.Disable();
             }
         }
-        private void Shoot() { }
+        private void Shoot()
+        {
+            _shootingBehaviour.UpdateAction();
+        }
         private void Update()
         {
             if (_inputActions.Player.enabled)

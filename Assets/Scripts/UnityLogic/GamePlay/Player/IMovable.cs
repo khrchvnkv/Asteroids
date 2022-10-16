@@ -5,9 +5,10 @@ namespace UnityLogic.GamePlay.Player
         public float AcceleratingSpeed;
         public float MaxSpeed;
         public float StoppingSpeed;
-        public float MaxX;
-        public float MaxY;
+        public float RotateSpeed;   // Degrees per Second
+        public GamePlayController.ScreenSizeData Screen;
     }
+    
 
     public interface IMovable
     {

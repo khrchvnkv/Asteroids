@@ -6,7 +6,6 @@ using CoreLogic.UI;
 using Cysharp.Threading.Tasks;
 using UnityLogic.UnityEventSystem;
 using UnityEngine;
-using UnityLogic.GamePlay;
 using UnityLogic.UI.MainMenu;
 using UnityLogic.UI.SplashScreen;
 
@@ -32,7 +31,7 @@ namespace UnityLogic
         }
         #endregion
 
-        private readonly Dictionary<Type, Manager> _managers = new Dictionary<Type, Manager>();
+        private readonly Dictionary<Type, Controller> _controllers = new Dictionary<Type, Controller>();
 
         public EventManager EventManager { get; private set; }
 
@@ -56,38 +55,31 @@ namespace UnityLogic
             EventManager.Push(new HideWindowEvent(new SplashScreenWindowData()));
             EventManager.Push(new ShowWindowEvent(new MainMenuWindowData()));
         }
-        public void RegisterManager<T>(T manager) where T : Manager
+        public void RegisterController<T>(T controller) where T : Controller
         {
-            var type = manager.GetType();
-            if (_managers.ContainsKey(type))
+            var type = controller.GetType();
+            if (_controllers.ContainsKey(type))
             {
                 Debug.LogWarning($"There are several managers of type {type} on the stage");
             }
             else
             {
-                _managers[type] = manager;
+                _controllers[type] = controller;
             }
         }
-        public T GetManager<T>() where T : Manager
+        public T GetController<T>() where T : Controller
         {
-            var managerType = typeof(T);
-            if (_managers.TryGetValue(managerType, out var result))
+            var controllerType = typeof(T);
+            if (_controllers.TryGetValue(controllerType, out var result))
             {
                 return (T)result;
             }
 
-            throw new NullReferenceException($"Error: {managerType} is not contains in dictionary");
+            throw new NullReferenceException($"Error: {controllerType} is not contains in dictionary");
         }
         public void RegisterEventSystem(in EventSystemController eventSystem)
         {
             _eventSystem = eventSystem;
-        }
-        private void OnDestroy()
-        {
-            foreach (var manager in _managers.Values)
-            {
-                manager.Unregister();
-            }
         }
     }
 }

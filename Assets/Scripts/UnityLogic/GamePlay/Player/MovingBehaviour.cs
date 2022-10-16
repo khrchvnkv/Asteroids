@@ -10,16 +10,26 @@ namespace UnityLogic.GamePlay.Player
         private readonly MovableCharacterData _movableData;
 
         private Vector3 _movingDirection;
+        private MovableInfo _movableInfo;
 
-        public event Action<float, float> OnPositionChanged;
+        public event Action<MovableInfo> OnPositionChanged;
+
+        public struct MovableInfo
+        {
+            public float X;
+            public float Y;
+            public float Rotation;
+            public float Speed;
+        }
 
         public MovingBehaviour(IMovable movable, Transform movingTransform)
         {
             _movable = movable;
             _transform = movingTransform;
             _movableData = movable.MovableData;
+            _movableInfo = new MovableInfo();
         }
-        public void UpdateAction()
+        void ICharacterBehaviour.UpdateAction()
         {
             // Move
             if (_movable.Vertical == 0.0f)
@@ -29,28 +39,36 @@ namespace UnityLogic.GamePlay.Player
             }
             else
             {
-                // Acceerating
-                _movingDirection += _transform.up * _movable.Vertical * Time.deltaTime;
+                // Accelerating
+                _movingDirection += _transform.up * _movableData.AcceleratingSpeed * _movable.Vertical;
+                _movingDirection = Vector3.ClampMagnitude(_movingDirection, _movableData.MaxSpeed);
             }
 
-            _movingDirection = Vector3.ClampMagnitude(_movingDirection, _movableData.MaxSpeed);
-            var position = _transform.position;
-            position += _movingDirection * _movableData.AcceleratingSpeed;
-            _transform.position = position;
+            _transform.position += _movingDirection * Time.deltaTime;
             CheckCameraOutOfBounds();
-            OnPositionChanged?.Invoke(position.x, position.y);
 
             // Rotate
-            _transform.Rotate(Vector3.forward, _movable.Horizontal * -180.0f * Time.deltaTime);
+            _transform.Rotate(Vector3.forward, _movable.Horizontal * _movableData.RotateSpeed * Time.deltaTime);
+            UpdateInfo();
+        }
+
+        private void UpdateInfo()
+        {
+            var position = _transform.position;
+            _movableInfo.X = position.x;
+            _movableInfo.Y = position.y;
+            _movableInfo.Rotation = _transform.rotation.eulerAngles.z;
+            _movableInfo.Speed = _movingDirection.magnitude;
+            OnPositionChanged?.Invoke(_movableInfo);
         }
         private void CheckCameraOutOfBounds()
         {
             var newPosition = _transform.position;
-            if (_transform.position.x > _movableData.MaxX || _transform.position.x < -_movableData.MaxX)
+            if (_transform.position.x > _movableData.Screen.MaxX || _transform.position.x < -_movableData.Screen.MaxX)
             {
                 newPosition.x *= -1;
             }
-            if (_transform.position.y > _movableData.MaxY || _transform.position.y < -_movableData.MaxY)
+            if (_transform.position.y > _movableData.Screen.MaxY || _transform.position.y < -_movableData.Screen.MaxY)
             {
                 newPosition.y *= -1;
             }

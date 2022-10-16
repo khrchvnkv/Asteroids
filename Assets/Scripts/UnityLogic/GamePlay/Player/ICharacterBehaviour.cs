@@ -1,4 +1,7 @@
-public interface ICharacterBehaviour
+namespace UnityLogic.GamePlay.Player
 {
-    void UpdateAction();
+    public interface ICharacterBehaviour
+    {
+        void UpdateAction();
+    }
 }
