@@ -1,6 +1,6 @@
-using CoreLogic;
 using CoreLogic.UI;
 using UnityEngine;
+using UnityLogic.GamePlay.Enemy;
 using UnityLogic.GamePlay.Player;
 using UnityLogic.GamePlay.Pool;
 using UnityLogic.UI.GameHUD;
@@ -14,6 +14,9 @@ namespace UnityLogic.GamePlay
 
         [Header("Prefabs")] 
         [SerializeField] private BulletController bulletPrefab;
+
+        [Header("Enemies")] 
+        [SerializeField] private EnemySpawner enemySpawner;
         
         private Pool<BulletController> _bulletPool;
         
@@ -50,7 +53,13 @@ namespace UnityLogic.GamePlay
         {
             gamePlayController.SetActive(true);
             playerController.SetBehaviourActivity(true);
+            enemySpawner.StartSpawn();
             EventManager.Push(new ShowWindowEvent(new GameHUD_Data(playerController.MovingBehaviour as MovingBehaviour)));
+        }
+        public void StopGame()
+        {
+            playerController.SetBehaviourActivity(false);
+            enemySpawner.StopSpawn();
         }
         private void OnBulletAddToPool(in ReturnBulletToPoolEvent args)
         {
@@ -59,6 +68,10 @@ namespace UnityLogic.GamePlay
         public BulletController GetBulletFromPool()
         {
             return _bulletPool.Get();
+        }
+        public Transform GetPlayerTransform()
+        {
+            return playerController.transform;
         }
     }
 }
