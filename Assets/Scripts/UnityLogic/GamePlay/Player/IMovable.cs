@@ -6,7 +6,7 @@ namespace UnityLogic.GamePlay.Player
         public float MaxSpeed;
         public float StoppingSpeed;
         public float RotateSpeed;   // Degrees per Second
-        public GamePlayController.ScreenSizeData Screen;
+        public GamePlayManager.ScreenSizeData Screen;
     }
     
 

@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace CoreLogic.SceneLoader
 {
-    public sealed class GameSceneManager
+    public sealed class SceneLoader
     {
         private const string AppLoadingSceneName = "AppStart";
         private const string AppSceneName = "Application";

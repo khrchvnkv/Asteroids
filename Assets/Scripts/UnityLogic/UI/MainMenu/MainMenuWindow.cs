@@ -17,7 +17,7 @@ namespace UnityLogic.UI.MainMenu
         private void OnStartButtonClicked()
         {
             HideWindow();
-            var gamePlayController = GameCore.Instance.GetController<GamePlayController>();
+            var gamePlayController = GameCore.Instance.GetManager<GamePlayManager>();
             gamePlayController.StartGame();
         }
     }

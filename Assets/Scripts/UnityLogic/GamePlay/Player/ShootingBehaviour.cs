@@ -5,17 +5,21 @@ namespace UnityLogic.GamePlay.Player
     public class ShootingBehaviour : ICharacterBehaviour
     {
         private readonly Transform parentTransform;
-        private readonly GamePlayController gamePlayController;
+        private readonly GamePlayManager _gamePlayManager;
 
-        public ShootingBehaviour(Transform transform, GamePlayController controller)
+        public ShootingBehaviour(Transform transform, GamePlayManager manager)
         {
             parentTransform = transform;
-            gamePlayController = controller;
+            _gamePlayManager = manager;
         }
-        public void UpdateAction()
+        void ICharacterBehaviour.Reset()
+        {
+            
+        }
+        void ICharacterBehaviour.UpdateAction()
         {
             // Instantiate bullet
-            var bullet = gamePlayController.GetBulletFromPool();
+            var bullet = _gamePlayManager.GetBulletFromPool();
             var bulletTransform = bullet.transform;
             bulletTransform.position = parentTransform.position;
             bulletTransform.rotation = parentTransform.rotation;

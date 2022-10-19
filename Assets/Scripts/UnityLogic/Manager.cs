@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityLogic
 {
-    public abstract class Controller : MonoBehaviour
+    public abstract class Manager : MonoBehaviour
     {
         protected EventManager EventManager => GameCore.Instance.EventManager;
         
@@ -22,7 +22,7 @@ namespace UnityLogic
         }
         protected virtual void Inject()
         {
-            GameCore.Instance.RegisterController(this);
+            GameCore.Instance.RegisterManager(this);
         }
         protected virtual void Subscribe() { }
         protected virtual void Unsubscribe() { }

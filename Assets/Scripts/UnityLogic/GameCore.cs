@@ -31,11 +31,11 @@ namespace UnityLogic
         }
         #endregion
 
-        private readonly Dictionary<Type, Controller> _controllers = new Dictionary<Type, Controller>();
+        private readonly Dictionary<Type, Manager> _managers = new Dictionary<Type, Manager>();
 
         public EventManager EventManager { get; private set; }
 
-        private GameSceneManager _sceneManager;
+        private SceneLoader _sceneLoader;
         private EventSystemController _eventSystem;
         
         private void Awake()
@@ -46,8 +46,8 @@ namespace UnityLogic
         {
             const int delay = 3000;
             EventManager = new EventManager();
-            _sceneManager = new GameSceneManager();
-            await _sceneManager.LoadSceneAsync();
+            _sceneLoader = new SceneLoader();
+            await _sceneLoader.LoadSceneAsync();
             await UniTask.WaitWhile(() => _eventSystem == null);
             await UniTask.Delay(delay);
             
@@ -55,27 +55,27 @@ namespace UnityLogic
             EventManager.Push(new HideWindowEvent(new SplashScreenWindowData()));
             EventManager.Push(new ShowWindowEvent(new MainMenuWindowData()));
         }
-        public void RegisterController<T>(T controller) where T : Controller
+        public void RegisterManager<T>(T manager) where T : Manager
         {
-            var type = controller.GetType();
-            if (_controllers.ContainsKey(type))
+            var type = manager.GetType();
+            if (_managers.ContainsKey(type))
             {
                 Debug.LogWarning($"There are several managers of type {type} on the stage");
             }
             else
             {
-                _controllers[type] = controller;
+                _managers[type] = manager;
             }
         }
-        public T GetController<T>() where T : Controller
+        public T GetManager<T>() where T : Manager
         {
-            var controllerType = typeof(T);
-            if (_controllers.TryGetValue(controllerType, out var result))
+            var managerType = typeof(T);
+            if (_managers.TryGetValue(managerType, out var result))
             {
                 return (T)result;
             }
 
-            throw new NullReferenceException($"Error: {controllerType} is not contains in dictionary");
+            throw new NullReferenceException($"Error: {managerType} is not contains in dictionary");
         }
         public void RegisterEventSystem(in EventSystemController eventSystem)
         {

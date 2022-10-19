@@ -1,5 +1,6 @@
 using CoreLogic;
 using UnityEngine;
+using UnityLogic.GamePlay.Enemy;
 
 namespace UnityLogic.GamePlay.Pool
 {
@@ -8,14 +9,14 @@ namespace UnityLogic.GamePlay.Pool
         [SerializeField] private float movingSpeed;
         
         private new Transform transform;
-        private GamePlayController.ScreenSizeData _screenSizeData;
+        private GamePlayManager.ScreenSizeData _screenSizeData;
         
         private EventManager EventManager => GameCore.Instance.EventManager;
 
         private void Awake()
         {
             transform = GetComponent<Transform>();
-            _screenSizeData = GameCore.Instance.GetController<GamePlayController>().Screen;
+            _screenSizeData = GameCore.Instance.GetManager<GamePlayManager>().Screen;
         }
         private void Update()
         {
@@ -25,6 +26,15 @@ namespace UnityLogic.GamePlay.Pool
                 transform.position.y > _screenSizeData.MaxY || transform.position.y < -_screenSizeData.MaxY)
             {
                 DeleteToPool();
+            }
+        }
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.TryGetComponent(out EnemyBase enemy))
+            {
+                DeleteToPool();
+                enemy.Kill();
+                EventManager.Push(new OnEnemyKilledEvent());
             }
         }
         public void DeleteToPool()

@@ -1,5 +1,8 @@
+using System;
+using CoreLogic;
 using UnityEngine;
 using InputActions;
+using UnityLogic.GamePlay.Enemy;
 
 namespace UnityLogic.GamePlay.Player
 {
@@ -10,6 +13,8 @@ namespace UnityLogic.GamePlay.Player
         private PlayerInputActions _inputActions;
         private ICharacterBehaviour _movingBehaviour;
         private ICharacterBehaviour _shootingBehaviour;
+        private EventManager _eventManager;
+        private new Transform transform;
 
         public ICharacterBehaviour MovingBehaviour => _movingBehaviour;
         public float Horizontal { get; private set; }
@@ -18,8 +23,9 @@ namespace UnityLogic.GamePlay.Player
 
         public void Initialize()
         {
+            transform = GetComponent<Transform>();
             _inputActions = new PlayerInputActions();
-            var gamePlayController = GameCore.Instance.GetController<GamePlayController>();
+            var gamePlayController = GameCore.Instance.GetManager<GamePlayManager>();
             MovableData = new MovableCharacterData()
             {
                 AcceleratingSpeed = 0.35f,
@@ -31,6 +37,14 @@ namespace UnityLogic.GamePlay.Player
             _movingBehaviour = new MovingBehaviour(this, transform);
             _shootingBehaviour = new ShootingBehaviour(gunTransform, gamePlayController);
             _inputActions.Player.Shoot.performed += context => Shoot();
+            _eventManager = GameCore.Instance.EventManager;
+        }
+        public void ResetData()
+        {
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            _movingBehaviour.Reset();
+            _shootingBehaviour.Reset();
         }
         public void SetBehaviourActivity(in bool isActivity)
         {
@@ -55,6 +69,14 @@ namespace UnityLogic.GamePlay.Player
                 Horizontal = direction.x;
                 Vertical = direction.y;
                 MovingBehaviour.UpdateAction();
+            }
+        }
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.TryGetComponent(out EnemyBase enemy))
+            {
+                enemy.Kill();
+                _eventManager.Push(new OnPlayerDiedEvent(enemy.gameObject.name));
             }
         }
     }

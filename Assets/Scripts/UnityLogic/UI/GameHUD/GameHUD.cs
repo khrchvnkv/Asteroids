@@ -1,6 +1,7 @@
 using CoreLogic.UI;
 using TMPro;
 using UnityEngine;
+using UnityLogic.GamePlay;
 using UnityLogic.GamePlay.Player;
 
 namespace UnityLogic.UI.GameHUD
@@ -9,6 +10,7 @@ namespace UnityLogic.UI.GameHUD
     {
         public readonly MovingBehaviour MovingBehaviour;
         
+        public GameHUD_Data() { }
         public GameHUD_Data(MovingBehaviour movingBehaviour)
         {
             MovingBehaviour = movingBehaviour;
@@ -26,11 +28,15 @@ namespace UnityLogic.UI.GameHUD
         [SerializeField] private TMP_Text yCoordText;
         [SerializeField] private TMP_Text rotationText;
         [SerializeField] private TMP_Text speedText;
-        
+
+        [Header("Score")] 
+        [SerializeField] private TMP_Text scoreText;
+
         public override void ShowWindow(IWindowData data)
         {
             base.ShowWindow(data);
             WindowData.MovingBehaviour.OnPositionChanged += UpdateCoordinateView;
+            GameCore.Instance.GetManager<GamePlayManager>().ScoreController.OnScoreChanged += UpdateScoreText;
         }
         private void UpdateCoordinateView(MovingBehaviour.MovableInfo info)
         {
@@ -38,6 +44,10 @@ namespace UnityLogic.UI.GameHUD
             yCoordText.text = string.Format(Y_TextFormat, info.Y);
             rotationText.text = string.Format(Rot_TextFormat, info.Rotation);
             speedText.text = string.Format(Speed_TextFormat, info.Speed);
+        }
+        private void UpdateScoreText(int score)
+        {
+            scoreText.text = $"{score}";
         }
     }
 }

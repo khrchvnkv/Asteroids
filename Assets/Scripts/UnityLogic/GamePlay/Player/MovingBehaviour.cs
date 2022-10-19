@@ -29,6 +29,10 @@ namespace UnityLogic.GamePlay.Player
             _movableData = movable.MovableData;
             _movableInfo = new MovableInfo();
         }
+        void ICharacterBehaviour.Reset()
+        {
+            _movingDirection = Vector3.zero;
+        }
         void ICharacterBehaviour.UpdateAction()
         {
             // Move
