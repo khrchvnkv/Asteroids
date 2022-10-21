@@ -73,12 +73,7 @@ namespace UnityLogic.GamePlay.Enemy
             var count = Random.Range(2, 3);
             for (int i = 0; i < count; i++)
             {
-                var enemy = pool.Pool.Get();
-                enemy.transform.position = position;
-                enemy.transform.SetParent(transform);
-                enemy.SetTarget(GetEnemyTargetTransform(enemy), ReturnEnemyToPool);
-                enemy.gameObject.SetActive(true);
-                _spawnedEnemies.Add(enemy);
+                SpawnEnemyFromPool(pool, position);
             }
         }
         private IEnumerator SpawnCoroutine()
@@ -89,14 +84,19 @@ namespace UnityLogic.GamePlay.Enemy
             {
                 var randomPool = GetRandomPool();
                 var spawnPoint = GetRandomSpawnPoint();
-                var enemy = randomPool.Pool.Get();
-                enemy.transform.position = spawnPoint.position;
-                enemy.transform.SetParent(transform);
-                enemy.SetTarget(GetEnemyTargetTransform(enemy, spawnPoint), ReturnEnemyToPool);
-                enemy.gameObject.SetActive(true);
-                _spawnedEnemies.Add(enemy);
+                SpawnEnemyFromPool(randomPool, spawnPoint.position, spawnPoint);
                 yield return delay;
             }
+        }
+        private void SpawnEnemyFromPool(in EnemyPool pool, in Vector3 position,
+            in Transform exclusiveSpawnPoint = null)
+        {
+            var enemy = pool.Pool.Get();
+            enemy.transform.position = position;
+            enemy.transform.SetParent(transform);
+            enemy.SetTarget(GetEnemyTargetTransform(enemy, exclusiveSpawnPoint), ReturnEnemyToPool);
+            enemy.gameObject.SetActive(true);
+            _spawnedEnemies.Add(enemy);
         }
         private Transform GetEnemyTargetTransform(in EnemyBase enemy, in Transform spawnPoint = null)
         {
