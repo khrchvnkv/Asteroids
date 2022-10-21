@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Shoot",
+                    "name": "GunShoot",
                     "type": "Button",
                     "id": "f17a9bd0-7ca8-4a81-a525-ae7e18e264c6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LaserShoot",
+                    "type": "Button",
+                    "id": "dfaf0ac5-fb7e-462f-9a99-fabc267e8cf2",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -32,7 +41,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "Shoot",
+                    "action": "GunShoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -43,7 +52,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "Shoot",
+                    "action": "GunShoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -156,6 +165,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "c8e56bff-bf97-4f89-b302-c27965a68dbd",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "LaserShoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

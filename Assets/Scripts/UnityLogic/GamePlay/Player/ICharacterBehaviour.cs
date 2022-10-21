@@ -4,5 +4,6 @@ namespace UnityLogic.GamePlay.Player
     {
         void Reset();
         void UpdateAction();
+        void DoAction();
     }
 }

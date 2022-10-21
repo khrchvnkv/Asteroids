@@ -33,7 +33,8 @@ namespace CoreLogic
             }
             public void Invoke(in TEvent eventData)
             {
-                foreach (var handler in _handlersMap.Values)
+                var handlers = new List<UnityEventHandler<TEvent>>(_handlersMap.Values);
+                foreach (var handler in handlers)
                 {
                     handler?.Invoke(eventData);
                 }

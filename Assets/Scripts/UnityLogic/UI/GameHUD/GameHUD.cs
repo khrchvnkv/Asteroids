@@ -9,11 +9,13 @@ namespace UnityLogic.UI.GameHUD
     public sealed class GameHUD_Data : IWindowData
     {
         public readonly MovingBehaviour MovingBehaviour;
+        public readonly LaserShootingBehaviour LaserBehaviour;
         
         public GameHUD_Data() { }
-        public GameHUD_Data(MovingBehaviour movingBehaviour)
+        public GameHUD_Data(MovingBehaviour movingBehaviour, LaserShootingBehaviour laserBehaviour)
         {
             MovingBehaviour = movingBehaviour;
+            LaserBehaviour = laserBehaviour;
         }
     }
     public sealed class GameHUD : UserInterfaceWindow<GameHUD_Data>
@@ -32,11 +34,32 @@ namespace UnityLogic.UI.GameHUD
         [Header("Score")] 
         [SerializeField] private TMP_Text scoreText;
 
+        [Header("Laser Data")] 
+        [SerializeField] private LaserInfoView laserInfo;
+
         public override void ShowWindow(IWindowData data)
         {
             base.ShowWindow(data);
+            laserInfo.Inject(LaserShootingBehaviour.MaxLaserShoots);
             WindowData.MovingBehaviour.OnPositionChanged += UpdateCoordinateView;
-            GameCore.Instance.GetManager<GamePlayManager>().ScoreController.OnScoreChanged += UpdateScoreText;
+            WindowData.LaserBehaviour.OnReloadStarted += laserInfo.EnableSlider;
+            WindowData.LaserBehaviour.OnReloadFinished += laserInfo.DisableSlider;
+            WindowData.LaserBehaviour.OnLaserReloadProgressChanged += laserInfo.SetReloadProgressValue;
+            WindowData.LaserBehaviour.OnLaserShootsCountChanged += laserInfo.SetShootCount;
+            var scoreController = GameCore.Instance.GetManager<GamePlayManager>().ScoreController;
+            scoreController.OnScoreChanged += UpdateScoreText;
+            UpdateScoreText(scoreController.Score);
+            laserInfo.SetShootCount(WindowData.LaserBehaviour.AvailableShoots);
+        }
+        public override void HideWindow()
+        {
+            base.HideWindow();
+            WindowData.MovingBehaviour.OnPositionChanged -= UpdateCoordinateView;
+            WindowData.LaserBehaviour.OnReloadStarted -= laserInfo.EnableSlider;
+            WindowData.LaserBehaviour.OnReloadFinished -= laserInfo.DisableSlider;
+            WindowData.LaserBehaviour.OnLaserReloadProgressChanged -= laserInfo.SetReloadProgressValue;
+            WindowData.LaserBehaviour.OnLaserShootsCountChanged -= laserInfo.SetShootCount;
+            GameCore.Instance.GetManager<GamePlayManager>().ScoreController.OnScoreChanged -= UpdateScoreText;
         }
         private void UpdateCoordinateView(MovingBehaviour.MovableInfo info)
         {

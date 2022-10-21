@@ -55,6 +55,7 @@ namespace UnityLogic.GamePlay.Player
             _transform.Rotate(Vector3.forward, _movable.Horizontal * _movableData.RotateSpeed * Time.deltaTime);
             UpdateInfo();
         }
+        void ICharacterBehaviour.DoAction() { }
 
         private void UpdateInfo()
         {

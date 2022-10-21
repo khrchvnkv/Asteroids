@@ -2,21 +2,19 @@ using UnityEngine;
 
 namespace UnityLogic.GamePlay.Player
 {
-    public class ShootingBehaviour : ICharacterBehaviour
+    public class GunShootingBehaviour : ICharacterBehaviour
     {
         private readonly Transform parentTransform;
         private readonly GamePlayManager _gamePlayManager;
 
-        public ShootingBehaviour(Transform transform, GamePlayManager manager)
+        public GunShootingBehaviour(Transform transform, GamePlayManager manager)
         {
             parentTransform = transform;
             _gamePlayManager = manager;
         }
-        void ICharacterBehaviour.Reset()
-        {
-            
-        }
-        void ICharacterBehaviour.UpdateAction()
+        void ICharacterBehaviour.Reset() { }
+        void ICharacterBehaviour.UpdateAction() { }
+        void ICharacterBehaviour.DoAction()
         {
             // Instantiate bullet
             var bullet = _gamePlayManager.GetBulletFromPool();

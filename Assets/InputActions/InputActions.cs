@@ -39,9 +39,18 @@ namespace InputActions
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Shoot"",
+                    ""name"": ""GunShoot"",
                     ""type"": ""Button"",
                     ""id"": ""f17a9bd0-7ca8-4a81-a525-ae7e18e264c6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LaserShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""dfaf0ac5-fb7e-462f-9a99-fabc267e8cf2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -56,7 +65,7 @@ namespace InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse and Keyboard"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""GunShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -67,7 +76,7 @@ namespace InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse and Keyboard"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""GunShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -180,6 +189,17 @@ namespace InputActions
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c8e56bff-bf97-4f89-b302-c27965a68dbd"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse and Keyboard"",
+                    ""action"": ""LaserShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,7 +226,8 @@ namespace InputActions
             // Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-            m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+            m_Player_GunShoot = m_Player.FindAction("GunShoot", throwIfNotFound: true);
+            m_Player_LaserShoot = m_Player.FindAction("LaserShoot", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -267,13 +288,15 @@ namespace InputActions
         private readonly InputActionMap m_Player;
         private IPlayerActions m_PlayerActionsCallbackInterface;
         private readonly InputAction m_Player_Move;
-        private readonly InputAction m_Player_Shoot;
+        private readonly InputAction m_Player_GunShoot;
+        private readonly InputAction m_Player_LaserShoot;
         public struct PlayerActions
         {
             private @PlayerInputActions m_Wrapper;
             public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
-            public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+            public InputAction @GunShoot => m_Wrapper.m_Player_GunShoot;
+            public InputAction @LaserShoot => m_Wrapper.m_Player_LaserShoot;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -286,9 +309,12 @@ namespace InputActions
                     @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                     @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                     @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                    @Shoot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShoot;
-                    @Shoot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShoot;
-                    @Shoot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShoot;
+                    @GunShoot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGunShoot;
+                    @GunShoot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGunShoot;
+                    @GunShoot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGunShoot;
+                    @LaserShoot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaserShoot;
+                    @LaserShoot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaserShoot;
+                    @LaserShoot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaserShoot;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -296,9 +322,12 @@ namespace InputActions
                     @Move.started += instance.OnMove;
                     @Move.performed += instance.OnMove;
                     @Move.canceled += instance.OnMove;
-                    @Shoot.started += instance.OnShoot;
-                    @Shoot.performed += instance.OnShoot;
-                    @Shoot.canceled += instance.OnShoot;
+                    @GunShoot.started += instance.OnGunShoot;
+                    @GunShoot.performed += instance.OnGunShoot;
+                    @GunShoot.canceled += instance.OnGunShoot;
+                    @LaserShoot.started += instance.OnLaserShoot;
+                    @LaserShoot.performed += instance.OnLaserShoot;
+                    @LaserShoot.canceled += instance.OnLaserShoot;
                 }
             }
         }
@@ -315,7 +344,8 @@ namespace InputActions
         public interface IPlayerActions
         {
             void OnMove(InputAction.CallbackContext context);
-            void OnShoot(InputAction.CallbackContext context);
+            void OnGunShoot(InputAction.CallbackContext context);
+            void OnLaserShoot(InputAction.CallbackContext context);
         }
     }
 }

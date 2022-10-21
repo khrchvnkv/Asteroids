@@ -61,7 +61,8 @@ namespace UnityLogic.GamePlay
             gamePlayContainer.SetActive(true);
             playerController.SetBehaviourActivity(true);
             enemySpawner.StartSpawn();
-            EventManager.Push(new ShowWindowEvent(new GameHUD_Data(playerController.MovingBehaviour as MovingBehaviour)));
+            EventManager.Push(new ShowWindowEvent(new GameHUD_Data(playerController.MovingBehaviour,
+                playerController.LaserBehaviour)));
         }
         private void StopGame()
         {
