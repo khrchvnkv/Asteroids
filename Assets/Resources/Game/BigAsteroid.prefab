@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9153210322756542711}
   - component: {fileID: 9153210322756542708}
   m_Layer: 8
-  m_Name: SimpleAsteroid
+  m_Name: BigAsteroid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,5 +114,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a232a2e975471b40aaeddc4c335c6a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movingSpeed: 1
+  movingSpeed: 0.75
   acceleratingSpeed: 0.25

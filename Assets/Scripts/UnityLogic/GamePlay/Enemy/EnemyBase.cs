@@ -15,7 +15,7 @@ namespace UnityLogic.GamePlay.Enemy
         
         [SerializeField] private float movingSpeed, acceleratingSpeed;
 
-        private new Transform transform;
+        protected new Transform transform;
         private EventManager _eventManager;
         private Transform _target;
         private Vector3 _movingDirection;
@@ -24,7 +24,7 @@ namespace UnityLogic.GamePlay.Enemy
 
         public abstract FollowingType FollowType { get; }
         
-        private void Awake()
+        protected virtual void Awake()
         {
             transform = GetComponent<Transform>();
             _eventManager = GameCore.Instance.EventManager;

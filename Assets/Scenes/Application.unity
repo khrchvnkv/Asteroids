@@ -431,7 +431,7 @@ Transform:
   m_GameObject: {fileID: 348410893}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 216318159}
@@ -665,6 +665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - {fileID: 9153210322756542708, guid: 6c64fc1b27d2ec044bcfbdd197eed136, type: 3}
+  - {fileID: 2099795580875529310, guid: dd0e332bfaa240b499f10b85a95419ca, type: 3}
   - {fileID: 1685387779725073586, guid: a995630b04f506044b7d0dbe2d10d736, type: 3}
   spawnPoints:
   - {fileID: 1355169332}

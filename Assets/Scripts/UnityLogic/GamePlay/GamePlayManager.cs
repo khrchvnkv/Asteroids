@@ -70,6 +70,10 @@ namespace UnityLogic.GamePlay
             playerController.SetBehaviourActivity(false);
             gamePlayContainer.SetActive(false);
         }
+        public void SpawnSmallAsteroids(in Vector3 position)
+        {   
+            enemySpawner.SpawnSmallAsteroids(position);
+        }
         private void OnPlayerDied(in OnPlayerDiedEvent args)
         {
             StopGame();

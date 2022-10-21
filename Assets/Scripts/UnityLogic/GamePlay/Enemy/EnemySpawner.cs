@@ -32,7 +32,6 @@ namespace UnityLogic.GamePlay.Enemy
                 Pool = new Pool<EnemyBase>(EnemyPrefab);
             }
         }
-
         private void Awake()
         {
             transform = GetComponent<Transform>();
@@ -68,6 +67,20 @@ namespace UnityLogic.GamePlay.Enemy
                 ReturnEnemyToPool(enemy);
             }
         }
+        public void SpawnSmallAsteroids(in Vector3 position)
+        {
+            var pool = _pools[typeof(SmallAsteroid)];
+            var count = Random.Range(2, 3);
+            for (int i = 0; i < count; i++)
+            {
+                var enemy = pool.Pool.Get();
+                enemy.transform.position = position;
+                enemy.transform.SetParent(transform);
+                enemy.SetTarget(GetEnemyTargetTransform(enemy), ReturnEnemyToPool);
+                enemy.gameObject.SetActive(true);
+                _spawnedEnemies.Add(enemy);
+            }
+        }
         private IEnumerator SpawnCoroutine()
         {
             var delay = new WaitForSeconds(delayBtwSpawn);
@@ -85,7 +98,7 @@ namespace UnityLogic.GamePlay.Enemy
                 yield return delay;
             }
         }
-        private Transform GetEnemyTargetTransform(in EnemyBase enemy, in Transform spawnPoint)
+        private Transform GetEnemyTargetTransform(in EnemyBase enemy, in Transform spawnPoint = null)
         {
             switch (enemy.FollowType)
             {
